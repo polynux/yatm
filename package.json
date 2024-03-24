@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "yatm",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -7,11 +7,15 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "scrap": "ts-node ./utils/scraper.ts"
   },
   "dependencies": {
-    "astro": "^4.5.9",
     "@astrojs/check": "^0.5.10",
+    "@types/jsdom": "^21.1.6",
+    "astro": "^4.5.9",
+    "jsdom": "^24.0.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.4.3"
   }
 }
