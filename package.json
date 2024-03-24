@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build --remote",
     "preview": "astro preview",
     "astro": "astro",
     "scrap": "ts-node ./utils/scraper.ts"
@@ -15,6 +15,7 @@
     "@astrojs/db": "^0.9.4",
     "@astrojs/solid-js": "^4.0.1",
     "@astrojs/tailwind": "^5.1.0",
+    "@astrojs/vercel": "^7.4.0",
     "@types/jsdom": "^21.1.6",
     "@types/leaflet": "^1.9.8",
     "astro": "^4.5.9",
