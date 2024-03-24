@@ -44,7 +44,7 @@ function Map() {
 }
 
 async function getDoctors() {
-  const doctors = await db.select().from(Praticiens).limit(10).execute();
+  const doctors = await db.select().from(Praticiens).execute();
   return doctors ?? [];
 }
 
