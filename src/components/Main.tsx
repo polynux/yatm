@@ -13,16 +13,16 @@ export default function App() {
 
 function Main() {
   return (
-    <div>
-      <div class="flex gap-4">
-        <div class="flex flex-col">
-          <div class="flex gap-2 items-center border-b-2 border-black w-fit">
+    <div class="w-full">
+      <div class="flex gap-4 max-w-screen-xl px-4 py-2 mx-auto">
+        <div class="flex flex-col basis-2/3">
+          <div class="flex gap-2 items-center w-fit text-black text-3xl font-bold">
             <FiMap /> 
             <h1>Find a Doctor Near You</h1>
           </div>
           <Map />
         </div>
-        <div class="flex flex-col">
+        <div class="flex flex-col basis-1/3">
           <DoctorList />
         </div>
       </div>
@@ -31,9 +31,12 @@ function Main() {
 }
 
 function Map() {
+  // big square of 200px by 300px
   return (
     <div>
-      <h2>Map</h2>
+      <div class="bg-gray-200 h-[200px] w-[300px] rounded-md">
+        <p>Map goes here</p>
+      </div>
     </div>
   )
 }
@@ -41,7 +44,6 @@ function Map() {
 function DoctorList() {
   return (
     <div>
-      <h2>Doctor List</h2>
       <Card>
         <h3>Dr. John Doe</h3>
         <p>Specialty: Cardiology</p>
