@@ -2,6 +2,9 @@ import Header from "@components/Header.tsx";
 import { FiMap } from "solid-icons/fi";
 import Card from "./Card.tsx";
 
+import { db, Praticiens } from "astro:db";
+import { createResource, createSignal, Match, Show, Switch } from "solid-js";
+
 export default function App() {
   return (
     <>
@@ -31,7 +34,6 @@ function Main() {
 }
 
 function Map() {
-  // big square of 200px by 300px
   return (
     <div>
       <div class="bg-gray-200 h-[200px] w-[300px] rounded-md">
@@ -41,14 +43,37 @@ function Map() {
   )
 }
 
+async function getDoctors() {
+  const doctors = await db.select().from(Praticiens).limit(10).execute();
+  return doctors ?? [];
+}
+
 function DoctorList() {
+  const [doctorList] = createResource(getDoctors);
+  
+
   return (
     <div>
-      <Card>
-        <h3>Dr. John Doe</h3>
-        <p>Specialty: Cardiology</p>
-        <p>Location: 123 Main St.</p>
-      </Card>
+      <Show when={doctorList.loading}>
+        <p>Loading...</p>
+      </Show>
+      <Switch>
+        <Match when={doctorList.error}>
+          <p>Error loading doctors</p>
+        </Match>
+        <Match when={doctorList()}>
+          <div class="flex flex-col gap-2">
+            {doctorList()?.map((doctor) => (
+              <Card>
+                <h3><strong>Nom :</strong> {doctor.name} {doctor.firstname}</h3>
+                <p><strong>Spécialté :</strong> {doctor.profession}</p>
+                <p><strong>Lieu :</strong> {doctor.address}, {doctor.zip} {doctor.city}</p>
+                <p><strong>Note :</strong> {doctor.description}</p>
+              </Card>
+            ))}
+          </div>
+        </Match>
+      </Switch>
     </div>
   )
 }
