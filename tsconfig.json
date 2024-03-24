@@ -1,9 +1,7 @@
 {
   "extends": "astro/tsconfigs/strict",
-  "include": ["src/**/*.ts", "utils/**/*.ts"],
-  "exclude": ["node_modules", "**/*.spec.ts"],
   "ts-node": {
-    "esm": true,
+    "esm": true
   },
   "compilerOptions": {
     "target": "es6",
@@ -12,6 +10,13 @@
     "rootDir": "src",
     "strict": true,
     "esModuleInterop": true,
-    "moduleResolution": "NodeNext"
+    "moduleResolution": "NodeNext",
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@assets/*": ["src/assets/*"]
+    }
   }
 }

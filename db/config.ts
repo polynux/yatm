@@ -11,7 +11,7 @@ const Praticiens = defineTable({
     profession: column.text(),
   },
 });
-//
+
 // https://astro.build/db/config
 export default defineDb({
   tables: { Praticiens }
