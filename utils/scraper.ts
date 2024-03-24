@@ -1,26 +1,39 @@
-import { JSDOM} from "jsdom"
+import { JSDOM } from "jsdom"
+import { db, Praticiens } from 'astro:db';
 
 const url = "https://bddtrans.fr";
 
 const links = [
   "generalistes",
-  // "endocrinologues",
-  // "gynecologues",
-  // "psy",
-  // "voix",
-  // "chirurgiens",
-  // "dermato",
-  // "avocats",
-  // "autres"
+  "endocrinologues",
+  "gynecologues",
+  "psy",
+  "voix",
+  "chirurgiens",
+  "dermato",
+  "avocats",
+  "autres"
 ];
 
-/*
-Nom : About Prénom : Philippe
-Adresse : 23 boulevard de Marengo
-Code postal : 31500 Ville : Toulouse Pays : France
-Description :
-Très safe sur la transidentité, suivent plusieurs personnes trans dans leur parcours.
-*/
+function unStrong(str: string) {
+  return str.replace(/<strong>/g, "").replace(/<\/strong>/g, "");
+}
+
+function unBr(str: string) {
+  return str.replace(/<br>/g, "");
+}
+
+function strInStrong(str: string) {
+  const regex = /<strong>(.*?)<\/strong>/g;
+  const maches = str.match(regex) ?? [""];
+  return maches.map((match) => unStrong(match));
+}
+
+function clean(str: string) {
+  let temp = unStrong(str);
+  return unBr(temp);
+}
+
 function parsePrat(prat: string) {
   let pratObj = {
     name: "",
@@ -29,25 +42,26 @@ function parsePrat(prat: string) {
     zip: "",
     city: "",
     description: "",
+    profession: ""
   };
 
-  const lines = prat.split("\n");
+  const lines = prat.split("<br>");
 
   for (let line of lines) {
     if (line.includes("Nom :")) {
-      pratObj.name = line.split("Nom : ")[1];
+      pratObj.name = strInStrong(line)[0];
     }
     if (line.includes("Prénom :")) {
-      pratObj.firstname = line.split("Prénom : ")[1];
+      pratObj.firstname = strInStrong(line)[1];
     }
     if (line.includes("Adresse :")) {
-      pratObj.address = line.split("Adresse : ")[1];
+      pratObj.address = strInStrong(line)[0];
     }
     if (line.includes("Code postal :")) {
-      pratObj.zip = line.split("Code postal : ")[1];
+      pratObj.zip = strInStrong(line)[0];
     }
     if (line.includes("Ville :")) {
-      pratObj.city = line.split("Ville : ")[1];
+      pratObj.city = strInStrong(line)[1];
     }
   }
 
@@ -77,21 +91,27 @@ async function getPrat(path: string) {
     const list = dom.window.document.querySelectorAll(".view_prat");
 
     for (let prat of list) {
-      pratList.push(parsePrat(prat.innerHTML));
+      let pratObj = parsePrat(prat.innerHTML);
+      pratObj.profession = path;
+      pratList.push(pratObj);
     }
   }
 
   return pratList;
 }
 
-async function main() {
+export default async function () {
   const prats: Record<string, any> = {};
 
   for (let link of links) {
-    prats[link] = await getPrat(link);
+  //   prats[link] = await getPrat(link);
+    let prat = await getPrat(link);
+    if (prat.length === 0) {
+      continue;
+    }
+    await db.insert(Praticiens).values(prat);
   }
 
   console.log(prats);
 }
 
-main();
